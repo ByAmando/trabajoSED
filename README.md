@@ -17,7 +17,7 @@ El módulo gestion_escribir se encarga de gestionar la escritura de datos en un 
 El módulo gestion_lectura se encarga de gestionar la lectura de datos de un dispositivo. Utiliza un protocolo de comunicación específico para garantizar que los datos se lean correctamente.
 
 #**Motor**
-El módulo motor se encarga de controlar la velocidad y la dirección de los motores. Utiliza un sistema de retroalimentación para garantizar que los motores se muevan en la dirección y a la velocidad correctas.
+El módulo motor se encarga de controlar las veces que vamos a repetir el ciclo de estados dado y la dirección de los motores. 
 
 #**Sistema**
-El módulo sistema es el componente principal del proyecto. Se encarga de coordinar y controlar todos los demás módulos. Utiliza un sistema de eventos para garantizar que todos los módulos se ejecuten en el orden correcto.
+El módulo sistema es el componente principal del proyecto. Se encarga de coordinar y controlar todos los demás módulos.
