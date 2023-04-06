@@ -1,7 +1,7 @@
 # trabajoSED
 Diseño en VHDL de un motor por pasos de un satélite
 
-#**Antirebotes**
+#Antirebotes
 El módulo antirebotes se encarga de prevenir los rebotes en los pulsadores. Utiliza un algoritmo basado en temporizadores para garantizar que las pulsaciones se registren correctamente.
 
 #**Divisor de frecuencia**
