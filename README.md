@@ -26,12 +26,19 @@ El módulo sistema es el componente principal del proyecto. Se encarga de coordi
 
 
 **INSTRUCCIONES TESTBENCH**
--1.Poner cada tets bench con su fichero correspondiente en el modulo correspondiente.
 
--2.Abrir un workspace.
-3)Añadir el test bench a ese workspace, click izq y add files
-4)Click en COMPILE ALL
-5)Luego te vas a simulate y seleccionas SELECT TOP LEVEL
-6)De todas las opciones tienes que coger el que tiene el nombre de la entidad vacia de tu fichero testBench y que tiene un simbolito "e" en rojo.
-7)Le das de nuevo a simulate y a Restart
-8)Te vas a la practica 1 y ahi sale como añadir las formas de onda y blabla que ya me cansé de explicar.
++1.Poner cada tets bench con su fichero correspondiente en el modulo correspondiente.
+
++2.Abrir un workspace.
+
++3.Añadir el test bench a ese workspace, click izq y add files
+
++4.Click en COMPILE ALL
+
++5.Luego te vas a simulate y seleccionas SELECT TOP LEVEL
+
++6.De todas las opciones tienes que coger el que tiene el nombre de la entidad vacia de tu fichero testBench y que tiene un simbolito "e" en rojo.
+
++7.Le das de nuevo a simulate y a Restart
+
++8.Te vas a la practica 1 y ahi sale como añadir las formas de onda y blabla que ya me cansé de explicar.
