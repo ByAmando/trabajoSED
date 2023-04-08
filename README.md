@@ -26,8 +26,8 @@ El módulo sistema es el componente principal del proyecto. Se encarga de coordi
 
 
 **INSTRUCCIONES TESTBENCH**
--1.Poner cada tets bench con su fichero correspondiente en el modulo correspondiente
--2.Abrir un workspace
+-1.Poner cada tets bench con su fichero correspondiente en el modulo correspondiente.
+-2.Abrir un workspace.
 3)Añadir el test bench a ese workspace, click izq y add files
 4)Click en COMPILE ALL
 5)Luego te vas a simulate y seleccionas SELECT TOP LEVEL
