@@ -49,6 +49,9 @@ BEGIN
 				IF ((BUTTON_1 = '1') OR (BUTTON_2 = '1')) AND (FIFO_FULL = '0') THEN
 					estado_c <= ESCRITURA;				
 				END IF;
+				IF (FIFO_FULL = Ô1Õ) THEN
+					LED <= Ô1Õ;			
+				END IF;
 			WHEN ESCRITURA =>
 				WRITE_FIFO <= '1';
 				IF ((BUTTON_1 = '1') AND (FIFO_FULL = '0')) THEN

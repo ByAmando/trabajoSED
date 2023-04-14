@@ -40,7 +40,7 @@ BEGIN
 		
 		CASE estado_s is				--Este proceso hace lo que seria el diagrama de bolas para pasar de un estado a otro.
 			WHEN IDLE =>
-				IF (FIFO_EMPTY /= '0' ) AND (FINISHED = '0') THEN  
+				IF (FIFO_EMPTY /= '0' ) AND (FINISHED = '0') THEN  —Amando esto es lo que decía solo entramos aquí si empty es 0, también las variables estas que inicial izamos a 0 se podrían poner en el reset  
 					SENTIDO <= '0';
 					START <='0';
 					READ_FIFO <= '0';	--Aunque estas variables valen ya 0 porque en este estado no se inicializan, yo las pongo a cero por si acaso.
