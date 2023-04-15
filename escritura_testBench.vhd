@@ -47,9 +47,9 @@ architecture tb_escritura_arch of gestor_escritura_tb is
     	Process
   	begin
    	 CLK <= '0';
-    	wait for 5 ns;
+    	wait for 50 ns;
    	 CLK <= '1';
-    	wait for 5 ns;
+    	wait for 50 ns;
   	end process;
 
     -- Proceso para establecer los valores de entrada en la simulación
@@ -57,23 +57,47 @@ architecture tb_escritura_arch of gestor_escritura_tb is
     	begin
     	
        	RESET <= '1'; --Asi el estado actual será REPOSO
-       	
-       	--SI FIFO_Button_! OR button_" == 1 AND FIFO_FULL == 0, el estado actual pasara a ser ESCRITURA
-       	--Para este caso activo el boton 1
-       	FIFO_FULL <= '0';
-       	BUTTON_1 <= '1'; 
-       	BUTTON_2 <='0';     
-        wait for 50 ns; 
-        --Ahora estoy en escritura y tengo que poner a 1 el WRITE_fIFO
-        WRITE_FIFO <= '1';
-        --Al ser el boton 1 el accionado en este ejemplo y la constante 01 ---> "101" es lo que ira en WORD_FIFO_WR
-        WORD_FIFO_WR <= "101";
+       	RESET <= '0';
+        
+--       SI FIFO_Button_! OR button_" == 1 AND FIFO_FULL == 0, el estado actual pasara a ser ESCRITURA
+--       Para este caso activo el boton 1
+--       FIFO_FULL <= '0';
+--       BUTTON_1 <= '1'; 
+--       BUTTON_2 <='0';     
+--        wait for 50 ns; 
+--        --Ahora estoy en escritura y tengo que poner a 1 el WRITE_fIFO
+--        --Al ser el boton 1 el accionado en este ejemplo y la constante 01 ---> "101" es lo que ira en WORD_FIFO_WR
+--        --Ahora pongo las condiciones para volver desde ESCRITURA a REPOSO, pudiendose darse que los dos botones esten a cero o que FIFO_FULL=1, pongo las dos por si acaso
+--        BUTTON_1 <= '0';
+--        FIFO_FULL <= '1';
+--        wait for 50 ns;
+--        
+        --BOTON 2 ACTIVO, ESCRIBE 1
+        FIFO_FULL <= '0';
+        BUTTON_2 <='1';     
         wait for 50 ns;
-        --Ahora pongo las condiciones para volver desde ESCRITURA a REPOSO, pudiendose darse que los dos boones esten a cero o que FIFO_FULL=1, pongo las dos por si acaso
-        BUTTON_1 <= '0';
+        BUTTON_2 <= '0';
         FIFO_FULL <= '1';
         wait for 50 ns;
-        assert false report "Fin de la simulación" severity failure;
+        
+--        --CASO DOS BOTONES ACTIVOS A LA VEZ
+--        FIFO_FULL <= '0';
+--        BUTTON_1 <= '1';
+--        BUTTON_2 <= '1';
+--        wait for 50 ns;
+        
+--        --CASO DE COLA LLENA
+--        BUTTON_1 <= '0';
+--        BUTTON_2 <= '1';
+--        FIFO_FULL <= '1';
+--        wait for 50 ns;
+
+        
     end process;
 end tb_escritura_arch;
+
+
+
+
+
 

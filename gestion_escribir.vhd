@@ -49,8 +49,10 @@ BEGIN
 				IF ((BUTTON_1 = '1') OR (BUTTON_2 = '1')) AND (FIFO_FULL = '0') THEN
 					estado_c <= ESCRITURA;				
 				END IF;
-				IF (FIFO_FULL = Ô1Õ) THEN
-					LED <= Ô1Õ;			
+				IF (FIFO_FULL = '1') THEN
+					LED <= '1';
+				ELSIF (FIFO_FULL = '0') THEN 
+					LED <= '0';			
 				END IF;
 			WHEN ESCRITURA =>
 				WRITE_FIFO <= '1';
@@ -71,6 +73,8 @@ END arch_gestor_escritura;
 
 
     
+
+
 
 
 

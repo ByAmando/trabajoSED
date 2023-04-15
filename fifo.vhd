@@ -35,12 +35,12 @@ architecture arch_fifo of fifo is
     	
     	--Definimos e instanciamos los punteros que vamos a usar para recorrer el array de arriba
     	--Definimos e instanciamos una variable que lleve la cuenta de las palabras en cola.
-    	signal WRITE_POINTER: integer range 0 to FIFO_MAX := 0;
-    	signal READ_POINTER: integer range 0 to FIFO_MAX := 0;
-    	signal FIFO_COUNT: integer range 0 to FIFO_MAX := 0;
-    	signal WRITE_POINTER_aux: integer range 0 to FIFO_MAX := 0;
-    	signal READ_POINTER_aux: integer range 0 to FIFO_MAX := 0;
-    	signal FIFO_COUNT_aux: integer range 0 to FIFO_MAX := 0;
+    	signal WRITE_POINTER: integer := 0;
+    	signal READ_POINTER: integer := 0;
+    	signal FIFO_COUNT: integer := 0;
+    	signal WRITE_POINTER_aux: integer := 0;
+    	signal READ_POINTER_aux: integer := 0;
+    	signal FIFO_COUNT_aux: integer := 0;
 	
 	
 
@@ -54,12 +54,18 @@ BEGIN
 		IF (RESET = '1') THEN
             		FIFO_EMPTY <= '1';
             		FIFO_FULL <= '0';
-            		FIFO_WORD_RD <= (others => '0');
+            		--FIFO_WORD_RD <= "000";
 			estado_s <= REPOSO;
 		ELSIF (CLK'EVENT) AND (CLK='1') THEN		-- Este proceso hace la asignacion del estado_s
 			estado_s <= estado_c;
 			WRITE_POINTER <= WRITE_POINTER_aux;
+			IF (WRITE_POINTER_aux >= FIFO_MAX + 1) THEN
+				WRITE_POINTER <= 0;
+			END IF;
 			READ_POINTER <= READ_POINTER_aux;
+			IF (READ_POINTER_aux = FIFO_MAX) THEN
+				READ_POINTER <= 0;
+			END IF;
 			FIFO_COUNT <= FIFO_COUNT_aux;
 
 		END IF;
@@ -91,20 +97,14 @@ BEGIN
 				END IF;					
 			WHEN ESCRITURA =>
 				FIFO_DATA(WRITE_POINTER) <= FIFO_WORD_WR;
-				WRITE_POINTER_aux <= WRITE_POINTER + 1;
-				IF (WRITE_POINTER = FIFO_MAX+1) THEN
-					WRITE_POINTER <= 0;
-				END IF;
+				WRITE_POINTER_aux <= WRITE_POINTER + 1;				
 				FIFO_COUNT_aux <= FIFO_COUNT + 1;
 				IF (WRITE_FIFO = '0') THEN
 					estado_c <= REPOSO;
 				END IF;	
 			WHEN LECTURA =>
 				FIFO_WORD_RD <= FIFO_DATA(READ_POINTER);
-				READ_POINTER_aux <= READ_POINTER + 1;
-				IF (READ_POINTER = FIFO_MAX+1) THEN
-					READ_POINTER <= 0;
-				END IF;
+				READ_POINTER_aux <= READ_POINTER + 1;	
 				FIFO_COUNT_aux <= FIFO_COUNT - 1;
 				IF (READ_FIFO = '0') THEN
 					estado_c <= REPOSO;
@@ -117,4 +117,5 @@ END arch_fifo;
 
     
     
+
 

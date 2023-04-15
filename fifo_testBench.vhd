@@ -53,40 +53,67 @@ architecture tb_fifo_arch of gestor_fifo_tb is
     	Process
   	begin
    	 CLK <= '0';
-    	wait for 50 ns;
+    	wait for 100 ns;
    	 CLK <= '1';
-    	wait for 50 ns;
+    	wait for 100 ns;
+  	end process;
+  	
+  	Process
+  	begin
+   	 RESET <= '1';--Asi el estado actual será REPOSO y WRITE_POINTER <= 0; READ_POINTER <= 0;FIFO_EMPTY <= '1';FIFO_FULL <= '0';FIFO_WORD_RD <= (others => '0');
+       			--Ademas se reinician punteros y contadores
+    	wait for 100 ns;
+   	 RESET <= '0';
+    	wait for 100 ns;
   	end process;
   	
   	sim_process: process
-    	begin
-    	
-       	RESET <= '1'; --Asi el estado actual será REPOSO y WRITE_POINTER <= 0; READ_POINTER <= 0;FIFO_EMPTY <= '1';FIFO_FULL <= '0';FIFO_WORD_RD <= (others => '0');
-       			--Ademas se reinician punteros y contadores
-       	wait for 50 ns;
-       	RESET <= '0'; --CREO que hay que ponerlo a cero para que asi este en bucle comprobando un evento de flanco de subida en clk y no este reiniciando todo el rato.
-       	
+    	begin    	
        	--Si WRITE_FIFO == 1 pasaremos al modo ESCRITURA
        	WRITE_FIFO <= '1';
        	FIFO_WORD_WR <= "101"; --Pongo que lo que se escriba sea esto cuando toque
        	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
-       	wait for 50 ns;
+       	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
        	WRITE_FIFO <= '0';
-       	wait for 50 ns;
+       	wait for 200 ns;
+       	
+       	WRITE_FIFO <= '1';
+       	FIFO_WORD_WR <= "001"; --Pongo que lo que se escriba sea esto cuando toque
+       	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
+       	wait for 100 ns;
+       	--Salgo del modo ESCRITURA y me voy a REPOSO
+       	WRITE_FIFO <= '0';
+       	wait for 200 ns;
 
 	--AHORA LEERE EL VALOR 101 QUE HE ESCRITO
        	
        	--SI READ_FIFO == 1 pasare al estado LECTURA
        	READ_FIFO <= '1';
        	--Una vez en el estado LECTURA se incrementara el puntero de lectura y el contador solos y se leera lo que haya ("101")   
-        wait for 50 ns; 
+        wait for 100 ns; 
         --Ahora vuelvo al estado de reposo
         READ_FIFO <= '0' ;
-        wait for 50 ns;
+        wait for 200 ns;
+        
+        WRITE_FIFO <= '1';
+       	FIFO_WORD_WR <= "100"; --Pongo que lo que se escriba sea esto cuando toque
+       	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
+       	wait for 100 ns;
+       	--Salgo del modo ESCRITURA y me voy a REPOSO
+       	WRITE_FIFO <= '0';
+       	wait for 200 ns;
+       	
+       	--SI READ_FIFO == 1 pasare al estado LECTURA
+       	READ_FIFO <= '1';
+       	--Una vez en el estado LECTURA se incrementara el puntero de lectura y el contador solos y se leera lo que haya ("101")   
+        wait for 100 ns; 
+        --Ahora vuelvo al estado de reposo
+        READ_FIFO <= '0' ;
+        wait for 250 ns;
         
         --Despues de los 50 ns se supone que volveriamos a empezar, es decir, se activaria RESET y blabla
-        assert false report "Fin de la simulación" severity failure;
+        --assert false report "Fin de la simulación" severity failure;
     end process;
 end tb_fifo_arch;
   	
@@ -100,3 +127,7 @@ end tb_fifo_arch;
   	
   	
   	
+
+
+
+
