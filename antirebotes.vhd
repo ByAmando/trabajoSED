@@ -17,68 +17,93 @@ architecture arch_debouncing of debouncing is
 
     -- CODIGO DEL ALUMNO --
 
-	-- DEFINICIONES --
-	TYPE estado IS (alto, bajo);
-	SIGNAL estActual, estFuturo : estado;
+	-- ----------------------------------------------------------------------------
+    	-- DEFINICIONES 
+    	-- ----------------------------------------------------------------------------
 	
-	SHARED VARIABLE CICLOS_ON : INTEGER RANGE 0 to 255;
-	SHARED VARIABLE CICLOS_OFF : INTEGER RANGE 0 to 255;
+	-- Estados --
+	TYPE estado2 IS (reposo, cuenta_alto, alto);
+	SIGNAL estActual2, estFuturo2 : estado2;
 	
-	CONSTANT CICLOS_MIN : INTEGER := 7;
+	-- Contadores --
+	SIGNAL CICLOS : std_logic_vector ( 2 DOWNTO 0 );
+	
+	-- Señales intermedias --
+	SIGNAL out_int : std_logic;  	-- Variables intermedias para almacenar el valor del boton final
+	SIGNAL CICLOS_int : std_logic_vector ( 2 DOWNTO 0 );
+    SIGNAL PRUEBA1, PRUEBA2 : std_logic;  	-- Variable para pruebas
 		
 BEGIN
-
-	-- DECLARACIONES --
-	estActual <= bajo;
-	estFuturo <= bajo;
-	
-	-- PROCESO DE SINCRONIZACION
-	sincronizacion : PROCESS (RESET, CLK)
+   	-- ----------------------------------------------------------------------------
+    	-- Se asigna “estActual2”. Proceso sincrono. Solo depende del reloj y de RESET. 
+    	-- ----------------------------------------------------------------------------
+	sincronizacion2 : PROCESS (RESET, CLK)
 	BEGIN
 	
-		IF (RESET = '1') THEN
+		IF (RESET = '1') THEN 			-- Si pulsamos reset pasamos al estado reposo y reseteamos el valor del boton
+			estActual2 <= reposo;
 			BUTTON_OUT <= '0';
+			CICLOS <= "000";
 		ELSIF (CLK'EVENT) AND (CLK = '1') THEN
-			estActual <= estFuturo;
+			estActual2 <= estFuturo2; 	-- En cada flanco de reloj hacemos estActual2 igual a estFuturo2
+			BUTTON_OUT <= out_int; 	-- Usamos una variable intermedia out_int para pasarle el valor a BUTTON_OUT
+			CICLOS <= CICLOS_int;  -- Usamos una variable intermedia CICLOS_int para pasarle el valor a CICLOS
 		END IF;
 	
-	END PROCESS sincronizacion;
+	END PROCESS sincronizacion2;
 
-	-- MAQUINA DE ESTADOS --
-	maqEstados : PROCESS (estActual)
-	BEGIN
-	
-		CASE estActual IS
+	-- ------------------------------------------------------------------------
+    	-- Se asigna la salida del boton.  Proceso combinacional.  
+    	-- ------------------------------------------------------------------------
+    maqEstados2 : PROCESS (estActual2)
+	BEGIN		
+		CASE estActual2 IS
+			WHEN reposo =>
+				
+				IF (BUTTON_IN = '1') THEN
+					estFuturo2 <= cuenta_alto;
+				ELSE
+					estFuturo2 <= reposo;
+					out_int <= '0';
+					CICLOS_int <= "000";
+				END IF;	
+				
+			WHEN cuenta_alto =>
+			
+				IF (BUTTON_IN = '1') THEN
+					IF (CICLOS = "110") THEN
+						estFuturo2 <= alto;
+						CICLOS_int <= "000";
+					ELSE
+						CICLOS_int <= std_logic_vector(unsigned(CICLOS) + 1);
+PRUEBA1 <= '0';
+PRUEBA2 <= '1';
+					END IF;
+				ELSE
+PRUEBA1 <= '1';
+PRUEBA2 <= '0';
+					estFuturo2 <= reposo;
+				END IF;	
+				
 			WHEN alto =>
+				out_int <= '1';
+				
 				IF (BUTTON_IN = '1') THEN
-					estFuturo <= alto;
-					
-					CICLOS_ON := CICLOS_ON + 1;
-					IF (CICLOS_ON = CICLOS_MIN) THEN
-						BUTTON_OUT <= '1';
-						CICLOS_ON := 0;
-					END IF;
+					estFuturo2 <= alto;
 				ELSE
-					estFuturo <= bajo;
-					CICLOS_ON := 0;
+					estFuturo2 <= reposo;		
 				END IF;
-			WHEN bajo =>
-				IF (BUTTON_IN = '1') THEN
-					estFuturo <= alto;
-					CICLOS_OFF := 0;
-				ELSE
-					estFuturo <= bajo;
-					
-					CICLOS_OFF := CICLOS_OFF + 1;
-					IF (CICLOS_OFF = CICLOS_MIN) THEN
-						BUTTON_OUT <= '0';
-						CICLOS_OFF := 0;
-					END IF;
-				END IF;
-								
+				
 		END CASE;
-	END PROCESS maqEstados;
+		
+	END PROCESS maqEstados2;
+        
 end architecture;
     
+
+
+
+
+
 
 
