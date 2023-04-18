@@ -23,7 +23,10 @@ architecture arch_gestor_lectura of gestor_lectura is
 	--estado_s = Señal que contiene el estado actual de los biestables
 	SIGNAL estado_c, estado_s: ESTADOS_FIFO; 
 	
-									
+	signal sentido_aux: std_logic;
+	signal start_aux: std_logic;
+	signal read_fifo_aux: std_logic;
+	signal ciclos_aux: std_logic_vector (1 downto 0);								
 BEGIN	
 	
 	PROCESS(CLK, RESET)
@@ -33,8 +36,14 @@ BEGIN
 			SENTIDO <= '0';
 			START <='0';
 			READ_FIFO <= '0';
+			CICLOS <= "00";
 		ELSIF (CLK'EVENT) AND (CLK='1') THEN		-- Este proceso hace la asignacion del estado_s
 			estado_s <= estado_c;
+			SENTIDO <= sentido_aux;
+			START <= start_aux;
+			READ_FIFO <= read_fifo_aux;
+			CICLOS <= ciclos_aux;
+			
 		END IF;
 	END PROCESS;
 		
@@ -43,24 +52,28 @@ BEGIN
 		
 		CASE estado_s is				--Este proceso hace lo que seria el diagrama de bolas para pasar de un estado a otro.
 			WHEN IDLE =>
+				read_fifo_aux <= '0';
+				start_aux <= '0';
+				sentido_aux <= '0';   --El bit + significativo es el del sentido 
+				ciclos_aux <= "00";
 				IF (FIFO_EMPTY /= '0' ) AND (FINISHED = '0') THEN  
 					estado_c <= LECTURA;
 				END IF;
 			WHEN LECTURA =>
-				READ_FIFO <= '1';				
+				read_fifo_aux <= '1';				
 				estado_c <= START_MOTOR;
 				
 			WHEN START_MOTOR =>
-				READ_FIFO <= '0';
-				START <= '1';
-				SENTIDO <= FIFO_WORD_RD(2);   --El bit + significativo es el del sentido 
-				CICLOS <= FIFO_WORD_RD (1 downto 0); --El resto de bits son el numero de ciclos				
+				read_fifo_aux <= '0';
+				start_aux <= '1';
+				sentido_aux <= FIFO_WORD_RD(2);   --El bit + significativo es el del sentido 
+				ciclos_aux <= FIFO_WORD_RD (1 downto 0); --El resto de bits son el numero de ciclos				
 				estado_c <=WAIT_FOR_MOTOR;					
 				
 			WHEN WAIT_FOR_MOTOR =>
-				START <= '0'; --Se nos dice que se pone a cero
-				SENTIDO <= FIFO_WORD_RD(2);
-				CICLOS <= FIFO_WORD_RD (1 downto 0);
+				start_aux <= '0';
+				sentido_aux <= FIFO_WORD_RD(2);   
+				ciclos_aux <= FIFO_WORD_RD (1 downto 0); 				
 				IF( FINISHED = '1') THEN
 					estado_c <= IDLE;
 				END IF;
@@ -70,6 +83,7 @@ BEGIN
 	END PROCESS;
 END arch_gestor_lectura;
     
+
 
 
 

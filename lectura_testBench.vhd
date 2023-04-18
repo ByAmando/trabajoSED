@@ -51,16 +51,22 @@ architecture tb_lectura_arch of gestor_lectura_tb is
     	Process
   	begin
    	 CLK <= '0';
-    	wait for 50 ns;
+    	wait for 150 ns;
    	 CLK <= '1';
-    	wait for 50 ns;
+    	wait for 150 ns;
+  	end process;
+  	
+  	Process
+  	begin
+   	 RESET <= '1';
+    	wait for 150 ns;
+   	 RESET <= '0';
+    	wait;
   	end process;
 
     -- Proceso para establecer los valores de entrada en la simulación
    	sim_process: process
     	begin
-       	RESET <= '1'; --Asi el estado actual será IDLE
-       	RESET <= '0';
        	--SI FIFO_EMPTY /= 0 y FINISHED = 0, el estado actual pasara a ser LECTURA
        	FIFO_EMPTY <= '1';
        	FINISHED <= '0';
@@ -69,15 +75,16 @@ architecture tb_lectura_arch of gestor_lectura_tb is
         
         --Ahora al poner reset = 0 entrare en el bucle de comprobar si clk cambia en vez de en el del reset.
         --Al tener fifo_empty == 0 y Finished = 1, me mantengo en el estado de espera 100ns y luego vuelvo a empezar
-        wait for 50 ns;
+        wait for 150 ns;
         FIFO_WORD_RD <= "101";
-        wait for 100 ns; 
+        wait for 150 ns; 
         FIFO_EMPTY <= '0';
         FINISHED <= '1';
-        wait for 100 ns;
+        wait for 150 ns;
     end process;
 
 end tb_lectura_arch;
+
 
 
 
