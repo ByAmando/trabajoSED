@@ -20,17 +20,22 @@ architecture tb_lectura_arch of gestor_lectura_tb is
         START: out std_logic
         );
     end component;
-
+	--ENTRADAS--
     signal reset: std_logic := '0';
     signal clk: std_logic := '0';
     signal fifo_empty: std_logic := '0';
     signal fifo_word_rd: std_logic_vector(2 downto 0) := "101";
     signal finished: std_logic := '0';
-    
+    --SALIDAS--
     signal sentido: std_logic;
     signal ciclos: std_logic_vector(1 downto 0);
     signal read_fifo: std_logic;
     signal start: std_logic;
+	--INTERNAS--
+	SIGNAL fin_test: std_logic := 0;
+	
+	--Constante para el ciclo de reloj--
+	constant ciclo : time := 100 ns;
     
 	
     begin
@@ -48,40 +53,46 @@ architecture tb_lectura_arch of gestor_lectura_tb is
     );
 
     -- Generación de un reloj para la simulación
-    	Process
+    GenCLK:	Process
   	begin
-   	 CLK <= '0';
-    	wait for 150 ns;
-   	 CLK <= '1';
-    	wait for 150 ns;
-  	end process;
+		IF(fin_test = '1')  THEN
+			CLK <= '0';
+			wait;
+		ELSE
+			CLK <= '0';
+			wait for ciclo/2;
+			CLK <= '1';
+			wait for ciclo/2;
+		END IF;
+  	end process GenCLK;
   	
-  	Process
+  	GenReset: Process
   	begin
-   	 RESET <= '1';
-    	wait for 150 ns;
-   	 RESET <= '0';
-    	wait;
-  	end process;
+		RESET <= '1';
+		wait for ciclo*2;
+		RESET <= '0';
+		wait;
+  	end process GenReset;
 
     -- Proceso para establecer los valores de entrada en la simulación
    	sim_process: process
     	begin
        	--SI FIFO_EMPTY /= 0 y FINISHED = 0, el estado actual pasara a ser LECTURA
-       	FIFO_EMPTY <= '1';
+       	FIFO_EMPTY <= '0';
        	FINISHED <= '0';
         --Una vez alcanzado el estado de LECTURA pasaré por los de START_MOTOR y WAIT_UNTIL_MOTOR directam
         --Leyendo de fifo_word_rd el '101' por lo que sentido = 1 y ciclos = 01
-        
         --Ahora al poner reset = 0 entrare en el bucle de comprobar si clk cambia en vez de en el del reset.
         --Al tener fifo_empty == 0 y Finished = 1, me mantengo en el estado de espera 100ns y luego vuelvo a empezar
-        wait for 150 ns;
+        wait for ciclo;
         FIFO_WORD_RD <= "101";
-        wait for 150 ns; 
+        wait for ciclo; 
         FIFO_EMPTY <= '0';
         FINISHED <= '1';
-        wait for 150 ns;
-    end process;
+        wait for ciclo;
+		fin_test <= '1';
+		wait;
+    end process sim_process;
 
 end tb_lectura_arch;
 
