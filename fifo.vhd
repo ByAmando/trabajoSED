@@ -41,6 +41,8 @@ architecture arch_fifo of fifo is
     	signal WRITE_POINTER_aux: integer := 0;
     	signal READ_POINTER_aux: integer := 0;
     	signal FIFO_COUNT_aux: integer := 0;
+    	signal FIFO_EMPTY_aux: std_logic := '0';
+    	signal FIFO_FULL_aux: std_logic := '0';
 	
 	
 
@@ -54,18 +56,22 @@ BEGIN
 		IF (RESET = '1') THEN
             		FIFO_EMPTY <= '1';
             		FIFO_FULL <= '0';
-            		--FIFO_WORD_RD <= "000";
 			estado_s <= REPOSO;
 		ELSIF (CLK'EVENT) AND (CLK='1') THEN		-- Este proceso hace la asignacion del estado_s
 			estado_s <= estado_c;
-			WRITE_POINTER <= WRITE_POINTER_aux;
+			WRITE_POINTER <= WRITE_POINTER_aux;	
+			--Tengo que comprobar aqui si el puntero de escritura esta en el limite para actualizarlo a tiempo
 			IF (WRITE_POINTER_aux >= FIFO_MAX + 1) THEN
 				WRITE_POINTER <= 0;
 			END IF;
 			READ_POINTER <= READ_POINTER_aux;
+			--Tengo que comprobar aqui si el puntero de lectura esta en el limite para actualizarlo a tiempo
 			IF (READ_POINTER_aux = FIFO_MAX) THEN
 				READ_POINTER <= 0;
 			END IF;
+			--Actualizo el resto de señales
+			FIFO_EMPTY <= FIFO_EMPTY_aux;
+			FIFO_FULL <= FIFO_FULL_aux;
 			FIFO_COUNT <= FIFO_COUNT_aux;
 
 		END IF;
@@ -78,16 +84,16 @@ BEGIN
 		CASE estado_s is				--Este proceso (Maquina Moore) hace lo que seria el diagrama de bolas para pasar de un estado a otro.
 			WHEN REPOSO =>
 				IF (FIFO_COUNT = 0) THEN
-					FIFO_EMPTY <= '1';
+					FIFO_EMPTY_aux <= '1'; --No hay nada en la cola
 				END IF;
 				IF (FIFO_COUNT /= 0) THEN
-					FIFO_EMPTY <= '0';
+					FIFO_EMPTY_aux <= '0'; --Indico que hay algo en la cola
 				END IF;
 				IF (FIFO_COUNT = FIFO_MAX + 1) THEN
-					FIFO_FULL <= '1';
+					FIFO_FULL_aux <= '1';  --Indico que la cola esta llena
 				END IF;
 				IF(FIFO_COUNT /= FIFO_MAX + 1) THEN
-					FIFO_FULL <= '0';
+					FIFO_FULL_aux <= '0'; --Indico que la cola aun no está llena
 				END IF;
 				IF (WRITE_FIFO = '1') THEN
 					estado_c <= ESCRITURA;
@@ -117,5 +123,7 @@ END arch_fifo;
 
     
     
+
+
 
 

@@ -32,12 +32,14 @@ BEGIN
 	PROCESS(CLK, RESET)
 	BEGIN
 		IF (RESET = '1') THEN
+			--Si hay RESET actualizo todas las variables auxiliares a cero
 			estado_s <= IDLE;
 			SENTIDO <= '0';
 			START <='0';
 			READ_FIFO <= '0';
 			CICLOS <= "00";
-		ELSIF (CLK'EVENT) AND (CLK='1') THEN		-- Este proceso hace la asignacion del estado_s
+		ELSIF (CLK'EVENT) AND (CLK='1') THEN		-- Este proceso hace la asignacion del estado_s (actual)
+		--A partir de los valores de las variables auxiliares actualizo las variables "principales" en cada flanco de subida
 			estado_s <= estado_c;
 			SENTIDO <= sentido_aux;
 			START <= start_aux;
@@ -52,11 +54,15 @@ BEGIN
 		
 		CASE estado_s is				--Este proceso hace lo que seria el diagrama de bolas para pasar de un estado a otro.
 			WHEN IDLE =>
+			
 				read_fifo_aux <= '0';
 				start_aux <= '0';
 				sentido_aux <= '0';   --El bit + significativo es el del sentido 
 				ciclos_aux <= "00";
-				IF (FIFO_EMPTY /= '0' ) AND (FINISHED = '0') THEN  
+				IF (FIFO_EMPTY = '0' ) AND (FINISHED = '0') THEN
+				--Sé que en el enunciado pone que sea para FIFO_EMPTY distinto de 0 pero yo lo entendi como
+				--que si vale 1 es que la cola FIFO esta vacia y si vale 0 es que hay algo que leer de ahi que 
+				--la condic if este expresada asi. 
 					estado_c <= LECTURA;
 				END IF;
 			WHEN LECTURA =>
@@ -83,6 +89,7 @@ BEGIN
 	END PROCESS;
 END arch_gestor_lectura;
     
+
 
 
 

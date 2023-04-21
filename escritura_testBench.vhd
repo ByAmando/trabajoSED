@@ -47,54 +47,71 @@ architecture tb_escritura_arch of gestor_escritura_tb is
     	Process
   	begin
    	 CLK <= '0';
-    	wait for 50 ns;
+    	wait for 100 ns;
    	 CLK <= '1';
-    	wait for 50 ns;
+    	wait for 100 ns;
+  	end process;
+  	
+  	Process
+  	begin
+   	 RESET <= '1';
+    	wait for 100 ns;
+   	 RESET <= '0';
+    	wait for 100 ns;
   	end process;
 
     -- Proceso para establecer los valores de entrada en la simulación
    	sim_process: process
     	begin
-    	
-       	RESET <= '1'; --Asi el estado actual será REPOSO
-       	RESET <= '0';
         
---       SI FIFO_Button_! OR button_" == 1 AND FIFO_FULL == 0, el estado actual pasara a ser ESCRITURA
---       Para este caso activo el boton 1
---       FIFO_FULL <= '0';
---       BUTTON_1 <= '1'; 
---       BUTTON_2 <='0';     
---        wait for 50 ns; 
---        --Ahora estoy en escritura y tengo que poner a 1 el WRITE_fIFO
---        --Al ser el boton 1 el accionado en este ejemplo y la constante 01 ---> "101" es lo que ira en WORD_FIFO_WR
---        --Ahora pongo las condiciones para volver desde ESCRITURA a REPOSO, pudiendose darse que los dos botones esten a cero o que FIFO_FULL=1, pongo las dos por si acaso
---        BUTTON_1 <= '0';
---        FIFO_FULL <= '1';
---        wait for 50 ns;
---        
-        --BOTON 2 ACTIVO, ESCRIBE 1
-        FIFO_FULL <= '0';
-        BUTTON_2 <='1';     
-        wait for 50 ns;
-        BUTTON_2 <= '0';
-        FIFO_FULL <= '1';
-        wait for 50 ns;
         
---        --CASO DOS BOTONES ACTIVOS A LA VEZ
+------------------------------------------------------------------------------------------------------------------       
+----------------------------------------CASO 1: BOTON 1 ACTIVO----------------------------------------------------
+------------------------------------------------------------------------------------------------------------------ 
+
+--      SI FIFO_Button_! OR button_" == 1 AND FIFO_FULL == 0, el estado actual pasara a ser ESCRITURA
+        FIFO_FULL <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
+        BUTTON_1 <='1';   --Escribimos con el boton 1
+        wait for 100 ns;
+        BUTTON_1 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
+        --FIFO_FULL <= '1';
+        wait for 100 ns;
+
+
+------------------------------------------------------------------------------------------------------------------       
+----------------------------------------CASO 2: BOTON 2 ACTIVO----------------------------------------------------
+------------------------------------------------------------------------------------------------------------------  
+--        FIFO_FULL <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
+--        BUTTON_2 <='1';   --Escribimos con el boton 2
+--        wait for 100 ns;
+--        BUTTON_2 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
+--        --FIFO_FULL <= '1';
+--        wait for 100 ns;
+ 
+--------------------------------------------------------------------------------------------------------------------------        
+----------------------------------------CASO 3: LOS DOS BOTONES ACTIVOS A LA VEZ------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+--AUNQUE SE SUPONE QUE ESTE CASO NO DEBE DARSE EN LA REALIDAD, NOSOTROS LO HEMOS MODELADO PARA QUE PERMANEZCA EN REPOSO---
+ 
 --        FIFO_FULL <= '0';
---        BUTTON_1 <= '1';
---        BUTTON_2 <= '1';
---        wait for 50 ns;
+--        BUTTON_1 <= '1'; --ACTIVO BOTON 1
+--        BUTTON_2 <= '1'; --ACTIVO BOTON 2
+--        wait for 100 ns;
         
---        --CASO DE COLA LLENA
+------------------------------------------------------------------------------------------------------------------         
+----------------------------------------CASO 4: LA COLA ESTÁ LLENA------------------------------------------------
+------------------------------------------------------------------------------------------------------------------  
 --        BUTTON_1 <= '0';
---        BUTTON_2 <= '1';
---        FIFO_FULL <= '1';
---        wait for 50 ns;
+--        BUTTON_2 <= '1'; --Activo este por ej
+--        FIFO_FULL <= '1'; --Marco que fifo esta lleno asi que da igual el boton que pulse, me mantendré en reposo
+--        wait for 100 ns;
 
         
     end process;
 end tb_escritura_arch;
+
+
+
 
 
 

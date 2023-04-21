@@ -67,8 +67,17 @@ architecture tb_fifo_arch of gestor_fifo_tb is
     	wait for 100 ns;
   	end process;
   	
+
   	sim_process: process
-    	begin    	
+    	begin   
+-------------------------------------------------------------------------------------------------------------------------
+---------------------------------CASO 1: HAGO QUE ESCRIBA SUCESIVAMENTE 5,4,1 Y QUE LEA DOS VECES------------------------
+------------------------------------------------------------------------------------------------------------------------- 
+
+	
+--------------------------------------------------------------------------
+-----------------------------ESCRIBO EL 5---------------------------------
+--------------------------------------------------------------------------
        	--Si WRITE_FIFO == 1 pasaremos al modo ESCRITURA
        	WRITE_FIFO <= '1';
        	FIFO_WORD_WR <= "101"; --Pongo que lo que se escriba sea esto cuando toque
@@ -76,7 +85,11 @@ architecture tb_fifo_arch of gestor_fifo_tb is
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
        	WRITE_FIFO <= '0';
-       	wait for 200 ns;
+       	wait for 300 ns;
+       	
+--------------------------------------------------------------------------
+-----------------------------ESCRIBO EL 1---------------------------------
+--------------------------------------------------------------------------
        	
        	WRITE_FIFO <= '1';
        	FIFO_WORD_WR <= "001"; --Pongo que lo que se escriba sea esto cuando toque
@@ -84,9 +97,14 @@ architecture tb_fifo_arch of gestor_fifo_tb is
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
        	WRITE_FIFO <= '0';
-       	wait for 200 ns;
-
-	--AHORA LEERE EL VALOR 101 QUE HE ESCRITO
+       	wait for 300 ns;
+       	
+       	
+       	
+       	
+-----------------------------------------------------------------------------------
+---------------------AHORA LEERE EL VALOR DE LA POSIC X A LA QUE APUNTE EL PUNTERO
+-----------------------------------------------------------------------------------
        	
        	--SI READ_FIFO == 1 pasare al estado LECTURA
        	READ_FIFO <= '1';
@@ -94,7 +112,12 @@ architecture tb_fifo_arch of gestor_fifo_tb is
         wait for 100 ns; 
         --Ahora vuelvo al estado de reposo
         READ_FIFO <= '0' ;
-        wait for 200 ns;
+        wait for 300 ns;
+        
+        
+--------------------------------------------------------------------------
+-----------------------------ESCRIBO EL 4---------------------------------
+--------------------------------------------------------------------------
         
         WRITE_FIFO <= '1';
        	FIFO_WORD_WR <= "100"; --Pongo que lo que se escriba sea esto cuando toque
@@ -102,15 +125,19 @@ architecture tb_fifo_arch of gestor_fifo_tb is
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
        	WRITE_FIFO <= '0';
-       	wait for 200 ns;
+       	wait for 300 ns;
        	
-       	--SI READ_FIFO == 1 pasare al estado LECTURA
+       	
+-----------------------------------------------------------------------------------
+---------------------AHORA LEERE EL VALOR DE LA POSIC X A LA QUE APUNTE EL PUNTERO
+-----------------------------------------------------------------------------------       	
+       	
        	READ_FIFO <= '1';
        	--Una vez en el estado LECTURA se incrementara el puntero de lectura y el contador solos y se leera lo que haya ("101")   
         wait for 100 ns; 
         --Ahora vuelvo al estado de reposo
         READ_FIFO <= '0' ;
-        wait for 250 ns;
+        wait for 300 ns;
         
         --Despues de los 50 ns se supone que volveriamos a empezar, es decir, se activaria RESET y blabla
         --assert false report "Fin de la simulación" severity failure;
@@ -127,6 +154,8 @@ end tb_fifo_arch;
   	
   	
   	
+
+
 
 
 
