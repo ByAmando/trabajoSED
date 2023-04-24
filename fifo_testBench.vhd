@@ -52,18 +52,18 @@ architecture tb_fifo_arch of gestor_fifo_tb is
     -- Generación de un reloj para la simulación
     	Process
   	begin
-   	 CLK <= '0';
+   	 clk <= '0';
     	wait for 100 ns;
-   	 CLK <= '1';
+   	 clk <= '1';
     	wait for 100 ns;
   	end process;
   	
   	Process
   	begin
-   	 RESET <= '1';--Asi el estado actual será REPOSO y WRITE_POINTER <= 0; READ_POINTER <= 0;FIFO_EMPTY <= '1';FIFO_FULL <= '0';FIFO_WORD_RD <= (others => '0');
+   	 reset <= '1';--Asi el estado actual será REPOSO y WRITE_POINTER <= 0; READ_POINTER <= 0;FIFO_EMPTY <= '1';FIFO_FULL <= '0';FIFO_WORD_RD <= (others => '0');
        			--Ademas se reinician punteros y contadores
     	wait for 100 ns;
-   	 RESET <= '0';
+   	 reset <= '0';
     	wait for 100 ns;
   	end process;
   	
@@ -79,24 +79,24 @@ architecture tb_fifo_arch of gestor_fifo_tb is
 -----------------------------ESCRIBO EL 5---------------------------------
 --------------------------------------------------------------------------
        	--Si WRITE_FIFO == 1 pasaremos al modo ESCRITURA
-       	WRITE_FIFO <= '1';
-       	FIFO_WORD_WR <= "101"; --Pongo que lo que se escriba sea esto cuando toque
+       	write_fifo <= '1';
+       	fifo_word_wr <= "101"; --Pongo que lo que se escriba sea esto cuando toque
        	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
-       	WRITE_FIFO <= '0';
+       	write_fifo <= '0';
        	wait for 300 ns;
        	
 --------------------------------------------------------------------------
 -----------------------------ESCRIBO EL 1---------------------------------
 --------------------------------------------------------------------------
        	
-       	WRITE_FIFO <= '1';
-       	FIFO_WORD_WR <= "001"; --Pongo que lo que se escriba sea esto cuando toque
+       	write_fifo <= '1';
+       	fifo_word_wr <= "001"; --Pongo que lo que se escriba sea esto cuando toque
        	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
-       	WRITE_FIFO <= '0';
+       	write_fifo <= '0';
        	wait for 300 ns;
        	
        	
@@ -107,11 +107,11 @@ architecture tb_fifo_arch of gestor_fifo_tb is
 -----------------------------------------------------------------------------------
        	
        	--SI READ_FIFO == 1 pasare al estado LECTURA
-       	READ_FIFO <= '1';
+       	read_fifo <= '1';
        	--Una vez en el estado LECTURA se incrementara el puntero de lectura y el contador solos y se leera lo que haya ("101")   
         wait for 100 ns; 
         --Ahora vuelvo al estado de reposo
-        READ_FIFO <= '0' ;
+        read_fifo <= '0' ;
         wait for 300 ns;
         
         
@@ -119,12 +119,12 @@ architecture tb_fifo_arch of gestor_fifo_tb is
 -----------------------------ESCRIBO EL 4---------------------------------
 --------------------------------------------------------------------------
         
-        WRITE_FIFO <= '1';
-       	FIFO_WORD_WR <= "100"; --Pongo que lo que se escriba sea esto cuando toque
+        write_fifo <= '1';
+       	fifo_word_wr <= "100"; --Pongo que lo que se escriba sea esto cuando toque
        	--Una vez en el modo ESCRITURA, se escribe en el sitio x lo que corresponda y se incrementan puntero y contador (esto se hace en el programa fifo, aqui no)
        	wait for 100 ns;
        	--Salgo del modo ESCRITURA y me voy a REPOSO
-       	WRITE_FIFO <= '0';
+       	write_fifo <= '0';
        	wait for 300 ns;
        	
        	
@@ -132,11 +132,11 @@ architecture tb_fifo_arch of gestor_fifo_tb is
 ---------------------AHORA LEERE EL VALOR DE LA POSIC X A LA QUE APUNTE EL PUNTERO
 -----------------------------------------------------------------------------------       	
        	
-       	READ_FIFO <= '1';
+       	read_fifo <= '1';
        	--Una vez en el estado LECTURA se incrementara el puntero de lectura y el contador solos y se leera lo que haya ("101")   
         wait for 100 ns; 
         --Ahora vuelvo al estado de reposo
-        READ_FIFO <= '0' ;
+        read_fifo <= '0' ;
         wait for 300 ns;
         
         --Despues de los 50 ns se supone que volveriamos a empezar, es decir, se activaria RESET y blabla
@@ -154,6 +154,7 @@ end tb_fifo_arch;
   	
   	
   	
+
 
 
 

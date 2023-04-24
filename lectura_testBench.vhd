@@ -50,17 +50,17 @@ architecture tb_lectura_arch of gestor_lectura_tb is
     -- Generación de un reloj para la simulación
     	Process
   	begin
-   	 CLK <= '0';
+   	 clk <= '0';
     	wait for 100 ns;
-   	 CLK <= '1';
+   	 clk <= '1';
     	wait for 100 ns;
   	end process;
   	
   	Process
   	begin
-   	 RESET <= '1';
+   	 reset <= '1';
     	wait for 100 ns;
-   	 RESET <= '0';
+   	 reset <= '0';
     	wait;
   	end process;
 
@@ -73,15 +73,15 @@ architecture tb_lectura_arch of gestor_lectura_tb is
 ------------------------------------------------------------------------------------------------------------------------------- 
    	
        	--SI FIFO_EMPTY = 0 y FINISHED = 0, el estado actual pasara a ser LECTURA
-       	FIFO_EMPTY <= '0';
-       	FINISHED <= '0';
+       	fifo_empty <= '0';
+       	finished <= '0';
         --Una vez alcanzado el estado de LECTURA pasaré por los de START_MOTOR y WAIT_UNTIL_MOTOR directam
         --Leyendo de fifo_word_rd el '101' por lo que sentido = 1 y ciclos = 01
         wait for 100 ns;
-        FIFO_WORD_RD <= "101"; --INTRODUZCO EL VALOR DESEADO EN LA FIFO
+        fifo_word_rd <= "101"; --INTRODUZCO EL VALOR DESEADO EN LA FIFO
         wait for 100 ns; 
-        FIFO_EMPTY <= '1'; --Poniendo a 1 esta variable conseguiriamos quedarnos en el estado IDLE (en este caso 1 no ocurre porque al principio estamos poniendola siempre a 0)
-        FINISHED <= '1'; --Poniendo a 1 esta variable conseguiremos pasar del estado WAIT FOR MOTOR  a IDLE de nuevo
+        fifo_empty <= '1'; --Poniendo a 1 esta variable conseguiriamos quedarnos en el estado IDLE (en este caso 1 no ocurre porque al principio estamos poniendola siempre a 0)
+        finished <= '1'; --Poniendo a 1 esta variable conseguiremos pasar del estado WAIT FOR MOTOR  a IDLE de nuevo
         wait for 100 ns;
   
   
@@ -89,21 +89,22 @@ architecture tb_lectura_arch of gestor_lectura_tb is
 --------------------------------------------------------------------------------------------------------------------------------------------------------------      
 ----------------------CASO 2: FIFO_WORD_RD = "101" POR LO QUE SENTIDO = 1 Y CICLOS = "01 pero NO ponemos FINISHED A 1 al final "------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------------  
---        FIFO_EMPTY <= '0';
---       	FINISHED <= '0';
+--        fifo_empty <= '0';
+--        finished <= '0';
 --        --Una vez alcanzado el estado de LECTURA pasaré por los de START_MOTOR y WAIT_UNTIL_MOTOR directam
 --        --Leyendo de fifo_word_rd el '101' por lo que sentido = 1 y ciclos = 01
 --        wait for 100 ns;
---        FIFO_WORD_RD <= "101"; --INTRODUZCO EL VALOR DESEADO EN LA FIFO
+--        fifo_word_rd <= "101"; --INTRODUZCO EL VALOR DESEADO EN LA FIFO
 --        wait for 100 ns; 
---        FIFO_EMPTY <= '1'; --Poniendo a 1 esta variable conseguiriamos quedarnos en el estado IDLE (en este caso 1 no ocurre porque al principio estamos poniendola siempre a 0)
---        --FINISHED <= '1'; --Poniendo a 1 esta variable conseguiremos pasar del estado WAIT FOR MOTOR  a IDLE de nuevo
+--        fifo_empty <= '1'; --Poniendo a 1 esta variable conseguiriamos quedarnos en el estado IDLE (en este caso 1 no ocurre porque al principio estamos poniendola siempre a 0)
+--        --finished <= '1'; --Poniendo a 1 esta variable conseguiremos pasar del estado WAIT FOR MOTOR  a IDLE de nuevo
 --        wait for 100 ns;
 
 
     end process;
 
 end tb_lectura_arch;
+
 
 
 

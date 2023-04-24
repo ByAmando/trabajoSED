@@ -46,18 +46,18 @@ architecture tb_escritura_arch of gestor_escritura_tb is
     -- Generación de un reloj para la simulación
     	Process
   	begin
-   	 CLK <= '0';
+   	 clk <= '0';
     	wait for 100 ns;
-   	 CLK <= '1';
+   	 clk <= '1';
     	wait for 100 ns;
   	end process;
   	
   	Process
   	begin
-   	 RESET <= '1';
+   	 reset <= '1';
     	wait for 100 ns;
-   	 RESET <= '0';
-    	wait for 100 ns;
+   	 reset <= '0';
+    	wait;
   	end process;
 
     -- Proceso para establecer los valores de entrada en la simulación
@@ -70,22 +70,22 @@ architecture tb_escritura_arch of gestor_escritura_tb is
 ------------------------------------------------------------------------------------------------------------------ 
 
 --      SI FIFO_Button_! OR button_" == 1 AND FIFO_FULL == 0, el estado actual pasara a ser ESCRITURA
-        FIFO_FULL <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
-        BUTTON_1 <='1';   --Escribimos con el boton 1
+        fifo_full <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
+        button_1 <='1';   --Escribimos con el boton 1
         wait for 100 ns;
-        BUTTON_1 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
-        --FIFO_FULL <= '1';
+        button_1 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
+        --fifo_full <= '1';
         wait for 100 ns;
 
 
 ------------------------------------------------------------------------------------------------------------------       
 ----------------------------------------CASO 2: BOTON 2 ACTIVO----------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------  
---        FIFO_FULL <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
---        BUTTON_2 <='1';   --Escribimos con el boton 2
+--        fifo_full <= '0'; --Indicamos quela fifo esta vacia y se puede escribir
+--        button_2 <='1';   --Escribimos con el boton 2
 --        wait for 100 ns;
---        BUTTON_2 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
---        --FIFO_FULL <= '1';
+--        button_2 <= '0';  --Con esta condicion o con la de abajo comentada, pasariamos a reposo de nuevo
+--        --fifo_full <= '1';
 --        wait for 100 ns;
  
 --------------------------------------------------------------------------------------------------------------------------        
@@ -93,22 +93,24 @@ architecture tb_escritura_arch of gestor_escritura_tb is
 --------------------------------------------------------------------------------------------------------------------------
 --AUNQUE SE SUPONE QUE ESTE CASO NO DEBE DARSE EN LA REALIDAD, NOSOTROS LO HEMOS MODELADO PARA QUE PERMANEZCA EN REPOSO---
  
---        FIFO_FULL <= '0';
---        BUTTON_1 <= '1'; --ACTIVO BOTON 1
---        BUTTON_2 <= '1'; --ACTIVO BOTON 2
+--        fifo_full <= '0';
+--        button_1 <= '1'; --ACTIVO BOTON 1
+--        button_2 <= '1'; --ACTIVO BOTON 2
 --        wait for 100 ns;
         
 ------------------------------------------------------------------------------------------------------------------         
 ----------------------------------------CASO 4: LA COLA ESTÁ LLENA------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------  
---        BUTTON_1 <= '0';
---        BUTTON_2 <= '1'; --Activo este por ej
---        FIFO_FULL <= '1'; --Marco que fifo esta lleno asi que da igual el boton que pulse, me mantendré en reposo
+--        button_1 <= '0';
+--        button_2 <= '1'; --Activo este por ej
+--        fifo_full <= '1'; --Marco que fifo esta lleno asi que da igual el boton que pulse, me mantendré en reposo
 --        wait for 100 ns;
 
         
     end process;
 end tb_escritura_arch;
+
+
 
 
 
